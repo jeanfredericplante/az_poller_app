@@ -9,4 +9,18 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-AzPollerApp::Application.config.secret_key_base = '4dc1ef137191f12969bc200273ea2030e12d3895b1c7a2068585c862d1f726137ee018af0e4ebeccc7dc744eea2fb40e6d45ebb1c0c6667338779f6e2c806872'
+
+def secure_token
+  token_file = Rails.root.join('.secret')
+  if File.exist?(token_file)
+    # Use the existing token.
+    File.read(token_file).chomp
+  else
+    # Generate a new token and store it in token_file.
+    token = SecureRandom.hex(64)
+    File.write(token_file, token)
+    token
+  end
+end
+
+AzPollerApp::Application.config.secret_key_base = secure_token
