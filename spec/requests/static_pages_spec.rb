@@ -9,13 +9,14 @@ describe "Static pages" do
       visit '/static_pages/home'
       expect(page).to have_content('Amazon price poller')
     end
-    it "should have the title 'APP | Home'" do
+    it "should have the title 'APP'" do
       visit '/static_pages/home'
       expect(page).to have_title("#{base_title}")
     end
-    it "should have the title 'APP | Home'" do
+    it "should not have the title '| Home'" do
       visit '/static_pages/home'
-      expect(page).to_not have_title("#{base_title} | Home")
+      expect(page).to_not have_title("Home")
+      expect(page).to_not have_title("|")
     end
   end
   
