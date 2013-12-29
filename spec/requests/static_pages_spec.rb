@@ -11,7 +11,11 @@ describe "Static pages" do
     end
     it "should have the title 'APP | Home'" do
       visit '/static_pages/home'
-      expect(page).to have_title("#{base_title} | Home")
+      expect(page).to have_title("#{base_title}")
+    end
+    it "should have the title 'APP | Home'" do
+      visit '/static_pages/home'
+      expect(page).to_not have_title("#{base_title} | Home")
     end
   end
   
