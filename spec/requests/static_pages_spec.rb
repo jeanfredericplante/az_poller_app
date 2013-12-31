@@ -5,29 +5,22 @@ describe "Static pages" do
   let(:base_title)  {"APP"}
   
   describe "Home page" do
-    it "should have the content 'Amazon price poller'" do
-      visit '/static_pages/home'
-      expect(page).to have_content('Amazon price poller')
-    end
-    it "should have the title 'APP'" do
-      visit '/static_pages/home'
-      expect(page).to have_title("#{base_title}")
-    end
-    it "should not have the title '| Home'" do
-      visit '/static_pages/home'
-      expect(page).to_not have_title("Home")
-      expect(page).to_not have_title("|")
-    end
+    before(:each) { visit root_path }
+    subject { page }
+   
+    it { should have_content('Amazon price poller') }
+    it { should have_title("#{base_title}") }
+    it { should_not have_title("Home") }
+    it { should_not have_title("|") }
+    
   end
   
   describe "Help page" do
-    it "should have the content 'help'" do
-      visit '/static_pages/help'
-      expect(page).to have_content("Help")
-    end
-    it "should have the title 'APP | Help'" do
-      visit '/static_pages/help'
-      expect(page).to have_title("#{base_title} | Help")
-    end
+    before(:each) { visit help_path }
+    subject { page }
+    
+    it { should have_content("Help") }
+    it { should have_title("#{base_title} | Help") }
+    
   end
 end
