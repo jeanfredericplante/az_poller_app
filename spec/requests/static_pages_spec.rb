@@ -20,7 +20,7 @@ describe "Static pages" do
     subject { page }
     
     it { should have_content("Help") }
-    it { should have_title("#{base_title} | Help") }
-    
+    it { should have_title("#{base_title} | Help") }   
   end
+  
 end
