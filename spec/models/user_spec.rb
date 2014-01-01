@@ -1,12 +1,16 @@
 require 'spec_helper'
 
 describe User do
-  before { @user = User.new(name: "JF", email: "jfp@hp.com") }
+  before { @user = User.new(name: "JF", email: "jfp@hp.com", password: "foo", password_confirmation: "foo") }
   subject { @user }
   
   it { should respond_to(:name) }
   it { should respond_to(:email) }
   it { should respond_to(:password_digest) }
+  # Those 2 attributes are virtual, they are not persisted in the database
+  it { should respond_to(:password) }
+  it { should respond_to(:password_confirmation) }
+  
   it { should be_valid }
   
   describe "when the name is not present" do
@@ -53,6 +57,19 @@ describe User do
       @user_dup.save # original @user is not saved yet
       expect(@user).to_not be_valid
     end
-
+  end
+  
+  describe "when password is not present" do
+    before do
+      @user.password, @user.password_confirmation = " ", " "
+    end
+    it { should_not be_valid }
+  end
+  
+  describe "when password and password confirmation don't match" do
+    before do
+      @user.password, @user.password_confirmation = " 1 ", " 2 "
+    end
+    it { should_not be_valid }
   end
 end
