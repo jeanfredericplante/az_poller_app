@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe User do
-  before { @user = User.new(name: "JF", email: "jfp@hp.com", password: "foo", password_confirmation: "foo") }
+  before { @user = User.new(name: "JF", email: "jfp@hp.com", password: "foobar", password_confirmation: "foobar") }
   subject { @user }
   
   it { should respond_to(:name) }
@@ -10,6 +10,7 @@ describe User do
   # Those 2 attributes are virtual, they are not persisted in the database
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:authenticate) }
   
   it { should be_valid }
   
@@ -71,5 +72,25 @@ describe User do
       @user.password, @user.password_confirmation = " 1 ", " 2 "
     end
     it { should_not be_valid }
+  end
+  
+  describe "return value of authenticate method" do
+    before { @user.save }
+    let(:found_user) { User.find_by(email: @user.email) }
+    
+    describe "with valid password" do
+      it { should eq found_user.authenticate(@user.password) }
+    end
+    
+    describe "with invalid password" do
+      let(:user_for_invalid_password) { found_user.authenticate("invalid_password") }
+      it { should_not eq user_for_invalid_password }
+      specify { expect(user_for_invalid_password).to be_false }   
+    end
+    
+    describe "with a password that's too short" do
+      before { @user.password = @user.password_confirmation = "a" * 5 }
+      it { should be_invalid } 
+    end   
   end
 end
