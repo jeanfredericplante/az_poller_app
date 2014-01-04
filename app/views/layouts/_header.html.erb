@@ -1,9 +1,10 @@
 <header class="navbar navbar-fixed-top navbar-inverse" role="navigation">		
     <div class="navbar-inner">
         <div class="container">
-			<%= link_to "AZP", "http://jfplante.me", id: "logo" %>
+			<%= link_to "AZP", root_path, id: "logo" %>
 			<nav>
 	            <ul class="nav pull-right">
+					<li> <%= link_to "signin" , signin_path %></li>
 					<li> <%= link_to "help" , help_path %></li>
 				</ul>
 			</nav>
