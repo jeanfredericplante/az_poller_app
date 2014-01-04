@@ -20,6 +20,7 @@ describe User do
     before { @user.name = " " }
     it { should_not be_valid }
   end
+  
   describe "when the name is too long" do
     before { @user.name = "a"*51 }
     it { should_not be_valid}
@@ -94,5 +95,10 @@ describe User do
       before { @user.password = @user.password_confirmation = "a" * 5 }
       it { should be_invalid } 
     end   
+  end
+  
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) {should_not be_blank}
   end
 end
