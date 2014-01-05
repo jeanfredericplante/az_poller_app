@@ -12,6 +12,7 @@ describe "Static pages" do
     it { should have_title("#{base_title}") }
     it { should_not have_title("Home") }
     it { should_not have_title("|") }
+    it { should have_link("Start tracking", href: signup_path)}
     
   end
   
