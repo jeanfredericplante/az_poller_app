@@ -57,12 +57,8 @@ describe "User Pages" do
     describe "when signed in" do
       let(:user) { FactoryGirl.create(:user) }
       
-      before(:each) do
-        visit signin_path
-        fill_in "Email", with: user.email
-        fill_in "Password", with: user.password
-        click_button "Sign in"
-      end
+      before { sign_in(user) }
+      
       
       describe "and going to the signup page" do
         before { visit signup_path }
@@ -73,6 +69,20 @@ describe "User Pages" do
       end
     end
   
+  end
+  
+  describe "Editing" do
+    let(:user) { FactoryGirl.create(:user)}
+    before { visit edit_user_path(user) }
+    describe "page" do
+      it { should have_content(user.name) }
+      it { should have_link('change', href: 'http://gravatar.com/emails')}
+    end
+
+    describe "with invalid info" do
+      before { click_button "Save changes" }
+      it { should have_error_message }
+    end
   end
   
 end
