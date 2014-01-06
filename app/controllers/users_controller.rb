@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
 
+  before_action :signed_in_user, only: [:edit, :update]
+  
   def show
     @user = User.find(params[:id])
   end
@@ -25,7 +27,7 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-    if @user.update_attributes(name: params[:name])
+    if @user.update_attributes(user_params)
       flash[:success] = "User updated successfully"
       redirect_to @user
     else
@@ -35,7 +37,13 @@ class UsersController < ApplicationController
   end
   
   private
-  def user_params
-    params.require(:user).permit(:name,:email,:password,:password_confirmation) 
-  end
+    def user_params
+      params.require(:user).permit(:name,:email,:password,:password_confirmation) 
+    end
+    
+    # before filters
+    def signed_in_user
+      redirect_to signin_url, notice: "Please sign in" unless signed_in?
+      # User.find(params[:id]) == current_user
+    end
 end

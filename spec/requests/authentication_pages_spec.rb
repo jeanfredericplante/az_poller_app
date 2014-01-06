@@ -55,6 +55,44 @@ describe "Authentication" do
       
     end
   end
+  
+  describe "authorization" do
+    describe "for non signed-in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      describe "in the users controller" do
+        describe "visiting the edit page" do
+          before(:each) do
+            visit edit_user_path(user)
+            it { should have_title("Sign in")}
+          end
+        end
+        describe "submitting the update action" do
+          before(:each) do
+            patch user_path(user)
+            specify { expect (response).to redirect_to (signin_path) }
+          end
+        end
+      end
+
+    end
+    describe "as a wrong user" do
+      let(:user) { FactoryGirl.create(:user) } 
+      let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@example.com") } 
+      sign_in(:user, no_capybara: true)
+      
+      describe "submitting a GET request to the users#edit action" do
+        before { get edit_user_path(wrong_user)}
+        specify { expect(response.body).to_not have_content(wrong_user.name)}
+        specify { expect(response).to redirect_to(root_url)}
+      end
+      describe "submiting a PATCH request to the users#update action" do
+        before { patch user_path(wrong_user)}
+        specify { expect(response).to redirect_to(root_url)}
+      end
+      
+    end
+    
+  end
     
   
   

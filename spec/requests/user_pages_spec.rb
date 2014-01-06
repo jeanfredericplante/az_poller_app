@@ -73,6 +73,11 @@ describe "User Pages" do
   
   describe "Editing" do
     let(:user) { FactoryGirl.create(:user)}
+    let(:user_email) { "jd@example.com" }
+    let(:user_name) { "jd" }
+    
+    
+    
     before { visit edit_user_path(user) }
     describe "page" do
       it { should have_content(user.name) }
@@ -82,6 +87,26 @@ describe "User Pages" do
     describe "with invalid info" do
       before { click_button "Save changes" }
       it { should have_error_message }
+    end
+    
+    describe "with valid info" do
+      before(:each) do
+        fill_in "Name", with: user_name
+        fill_in "Email", with: user_email
+        fill_in "Password", with: user.password
+        fill_in "Confirmation", with: user.password_confirmation
+        click_button "Save changes"
+      end
+      
+      it "should redirect to the user's path" do
+        expect(current_path).to eq user_path(user)
+      end
+      it { should have_content(user_email) }
+      it { should have_content(user_name) }
+      specify { expect( user.reload.name).to eq user_name } # this reloads from the db directly¡£
+      specify { expect( user.reload.email).to eq user_email }
+      
+      
     end
   end
   
