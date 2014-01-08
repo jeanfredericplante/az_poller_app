@@ -7,6 +7,13 @@ describe "User Pages" do
     before(:each) { visit signup_path }
     it { should have_content("Sign up") }
     it { should have_title ("Signup") }
+    
+    describe "if signed in as another user" do
+      describe "after creating a new user" do
+        it "should redirect to the new user's profile" 
+      end
+      
+    end
   end
   
   describe "Showing the user details page" do
@@ -78,7 +85,11 @@ describe "User Pages" do
     
     
     
-    before { visit edit_user_path(user) }
+    before { 
+      sign_in(user)
+      visit edit_user_path(user)    
+    }
+    
     describe "page" do
       it { should have_content(user.name) }
       it { should have_link('change', href: 'http://gravatar.com/emails')}

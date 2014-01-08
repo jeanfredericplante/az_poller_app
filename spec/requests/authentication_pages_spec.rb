@@ -11,8 +11,6 @@ describe "Authentication" do
     it { should have_content "Sign in"}
     it { should have_title "Sign in"}
     
-    
-    
     describe "when the signin fails" do
       before(:each) do
         fill_in "Email", with: "invalid"
@@ -26,8 +24,7 @@ describe "Authentication" do
         it { should_not have_error_message }  # uses custom matcher in /spec/support/utilities
       end
     end
-
-    
+     
     describe "after the user signs in" do
       let(:user) { FactoryGirl.create(:user) }
       let(:signin) { "Sign in" }
@@ -73,27 +70,34 @@ describe "Authentication" do
           end
         end
       end
+      describe "when attempting to visit a protected page" do
+        before {
+          visit edit_user_path(user)
+          fill_in "Email", with: user.email
+          fill_in "Password", with: user.password
+          click_button "Sign in"
+        }
+        
+        it "should render the desired protect page" do
+          expect(page).to have_title("Edit user")    
+        end
+      end
 
     end
     describe "as a wrong user" do
       let(:user) { FactoryGirl.create(:user) } 
-      let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@example.com") } 
-      sign_in(:user, no_capybara: true)
+      let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@example.com", name: "dr. wrong") } 
+      before { sign_in(user, no_capybara: true) } 
       
       describe "submitting a GET request to the users#edit action" do
         before { get edit_user_path(wrong_user)}
-        specify { expect(response.body).to_not have_content(wrong_user.name)}
+        specify { expect(response.body).to_not match(wrong_user.name)}
         specify { expect(response).to redirect_to(root_url)}
       end
       describe "submiting a PATCH request to the users#update action" do
-        before { patch user_path(wrong_user)}
-        specify { expect(response).to redirect_to(root_url)}
+        before { patch user_path(wrong_user) }
+        specify { expect(response).to redirect_to(root_url) }
       end
-      
     end
-    
   end
-    
-  
-  
 end
