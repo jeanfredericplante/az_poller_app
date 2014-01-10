@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
     if found_user && found_user.authenticate(params[:session][:password])
       flash[:success] = "Successfully signed in"
       sign_in found_user
-      redirect_to user_path(found_user)
+      redirect_back_or user_path(found_user)
     else
       flash.now[:error] = "Error signing in #{params[:session][:email]}"
       render 'new'

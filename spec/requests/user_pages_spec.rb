@@ -55,7 +55,6 @@ describe "User Pages" do
         before { click_button submit }
         it { should have_content(user.email) }
         it { should have_content(user.name) }
-        
         it { should have_selector("div.alert-success") }     
       end
 
@@ -93,6 +92,7 @@ describe "User Pages" do
     describe "page" do
       it { should have_content(user.name) }
       it { should have_link('change', href: 'http://gravatar.com/emails')}
+      it { should have_content('Edit user') }
     end
 
     describe "with invalid info" do
