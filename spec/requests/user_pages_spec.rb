@@ -87,10 +87,11 @@ describe "User Pages" do
     before { 
       sign_in(user)
       visit edit_user_path(user)    
+      # save_and_open_page
     }
     
     describe "page" do
-      it { should have_content(user.name) }
+      it { should have_content("user") }
       it { should have_link('change', href: 'http://gravatar.com/emails')}
       it { should have_content('Edit user') }
     end
@@ -119,6 +120,39 @@ describe "User Pages" do
       
       
     end
+  end
+  
+  describe "Index" do
+    before(:each) do
+      sign_in FactoryGirl.create(:user)
+      FactoryGirl.create(:user, name: "Joe", email: "joe@example.com")
+      FactoryGirl.create(:user, name: "Jack", email: "jack@example.com")
+      visit users_path
+    end
+    
+    it { should have_content("All users") }
+    it { should have_title("All users") }
+    
+    it "should list all users" do
+      User.all.each do |user|
+        expect(page).to have_selector('li', user.name)
+      end
+    end
+    
+    describe "Pagination" do
+      before(:all) { 30.times { FactoryGirl.create(:user)}}
+      after(:all) { User.delete_all}
+      
+      it { should have_selector('div.pagination')}
+      it "should list each user" do
+        User.paginate(page: 1).each do |user|
+          expect(page).to have_selector('li', user.name)
+          
+        end
+        
+      end
+    end
+    
   end
   
 end
