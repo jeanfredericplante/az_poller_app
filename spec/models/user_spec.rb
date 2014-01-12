@@ -12,9 +12,11 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
   it { should respond_to(:remember_token) }
+  it { should respond_to(:admin) }
 
   
   it { should be_valid }
+  it { should_not be_admin }
   
   describe "when the name is not present" do
     before { @user.name = " " }
@@ -52,6 +54,15 @@ describe User do
       end
       
     end
+  end
+  
+  describe "with the admin attribute set to true" do
+    before(:each) do
+      @user.save
+      @user.toggle!(:admin)
+    end
+    it { should be_admin }
+    
   end
   
   describe "when the email address is already taken" do

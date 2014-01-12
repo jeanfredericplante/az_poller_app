@@ -84,14 +84,16 @@ describe "User Pages" do
     
     
     
-    before { 
+    before(:each) { 
       sign_in(user)
       visit edit_user_path(user)    
-      # save_and_open_page
     }
     
     describe "page" do
-      it { should have_content("user") }
+      # before(:each) do  # debugging with screenshots
+      #   save_and_open_page
+      # end
+      it { should have_selector("input", user.name) }
       it { should have_link('change', href: 'http://gravatar.com/emails')}
       it { should have_content('Edit user') }
     end
@@ -151,6 +153,27 @@ describe "User Pages" do
         end
         
       end
+    end
+    
+    describe "Delete links" do
+      it { should_not have_link('delete')} 
+      describe "as an admin" do
+        let(:admin) { FactoryGirl.create(:admin)}
+        before do 
+          sign_in admin
+          visit users_path
+        end
+        it { should have_link('delete', href: user_path(User.first)) }
+        it { should_not have_link('delete', href: user_path(admin)) }
+        it "should be able to delete another user" do
+          expect do
+            click_link('delete', match: :first)
+          end.to change(User, :count).by(-1)
+        end
+         
+        
+      end
+      
     end
     
   end
