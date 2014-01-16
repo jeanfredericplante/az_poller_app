@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Static pages" do
   
-  let(:base_title)  {"APP"}
+  let(:base_title)  {"AZP"}
   
   describe "Home page" do
     before(:each) { visit root_path }

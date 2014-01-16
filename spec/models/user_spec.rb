@@ -13,6 +13,7 @@ describe User do
   it { should respond_to(:authenticate) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:admin) }
+  it { should respond_to(:microposts)}
 
   
   it { should be_valid }
@@ -111,5 +112,28 @@ describe User do
   describe "remember token" do
     before { @user.save }
     its(:remember_token) {should_not be_blank}
+  end
+  
+  describe "microposts associations" do
+    before { @user.save }
+    let!(:old_post) { FactoryGirl.create(:micropost, user: @user, created_at: 30.days.ago) }
+    let!(:new_post) { FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago) }
+    it "should have microposts ordered by more recent first" do
+      expect(@user.microposts.to_a).to eq [new_post, old_post] 
+    end
+  end
+  
+  describe "when destroying a user" do
+    before { 
+      @user.save 
+      2.times {FactoryGirl.create(:micropost, user: @user)}
+    }
+    it "should destroy associated microposts" do
+      microposts = @user.microposts.to_a
+      expect{ @user.destroy }.to change(Micropost,:count).by(-2)
+      microposts.each do |micropost|
+        expect { Micropost.find(micropost.id) }.to raise_error
+      end
+    end
   end
 end

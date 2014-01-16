@@ -178,4 +178,20 @@ describe "User Pages" do
     
   end
   
+  describe "profile page" do
+    let(:user) { FactoryGirl.create(:user)}
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "blabloil") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "calmoil") }
+    
+    before(:each) do
+      sign_in(user)
+      visit user_path(user)
+      # save_and_open_page debugging with screenshots
+    end
+    
+    it { should have_content(m1.content) }
+    it { should have_content(m2.content) }
+    it { should have_content("(#{user.microposts.count})") }
+  end
+  
 end
