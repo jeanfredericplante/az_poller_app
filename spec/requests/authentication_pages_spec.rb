@@ -23,8 +23,7 @@ describe "Authentication" do
         before { visit root_path }
         it { should_not have_error_message }  # uses custom matcher in /spec/support/utilities
       end
-    end
-     
+    end  
     describe "after the user signs in" do
       let(:user) { FactoryGirl.create(:user) }
       let(:signin) { "Sign in" }
@@ -89,6 +88,19 @@ describe "Authentication" do
           expect(page).to have_title("Edit user")    
         end
       end
+      describe "in the microposts controller" do
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { expect(response).to redirect_to (signin_path)}
+        end
+        describe "submitting to the destroy action" do
+          let(:m1) { FactoryGirl.create(:micropost)}
+          before { 
+            delete micropost_path(m1) }
+          specify { expect(response).to redirect_to (signin_path)}
+        end
+        
+      end
 
     end
     describe "as a wrong user" do
@@ -117,4 +129,5 @@ describe "Authentication" do
             
     end
   end
+  
 end

@@ -178,7 +178,7 @@ describe "User Pages" do
     
   end
   
-  describe "profile page" do
+  describe "Profile page" do
     let(:user) { FactoryGirl.create(:user)}
     let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "blabloil") }
     let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "calmoil") }

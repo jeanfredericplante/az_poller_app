@@ -38,5 +38,13 @@ module SessionsHelper
     session.delete(:return_to)
   end
 
+
+  # before filters
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to signin_url, notice: "Please sign in"
+    end
+  end
   
 end
