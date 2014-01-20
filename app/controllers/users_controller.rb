@@ -3,12 +3,12 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:edit, :update, :index]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy]
-  
+
   def new
-    redirect_to user_path(current_user) if signed_in?  
+    redirect_to user_path(current_user) if signed_in?
     @user = User.new
   end
-  
+
   def create
     @user = User.new(user_params)
     if @user.save
@@ -18,28 +18,28 @@ class UsersController < ApplicationController
       render 'new'
     end
   end
-  
+
   def destroy
       User.find(params[:id]).destroy
       flash[:success] = "User deleted"
       redirect_to users_path
 
   end
-  
+
   def show
     @user = User.find(params[:id])
     @microposts = @user.microposts.paginate(page: params[:page], per_page: 10)
   end
-  
+
   def index
-    @users = User.paginate(page: params[:page])   
+    @users = User.paginate(page: params[:page])
   end
-  
- 
+
+
   def edit
     @user = User.find(params[:id])
   end
-  
+
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(user_params)
@@ -50,17 +50,17 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
-  
+
   private
     def user_params
-      params.require(:user).permit(:name,:email,:password,:password_confirmation) 
+      params.require(:user).permit(:name,:email,:password,:password_confirmation)
     end
-    
-    # before filters    
+
+    # before filters
     def correct_user
       redirect_to root_url, notice: "Redirecting to the root page" unless current_user == User.find(params[:id])
     end
-    
+
     def admin_user
       redirect_to root_url unless current_user.admin?
     end

@@ -14,6 +14,8 @@ group :development, :test do
   gem 'sqlite3', '1.3.8'
   gem 'rspec-rails', '2.13.1'
   gem 'launchy'
+  gem 'rails_best_practices'
+  gem 'cane'
 end
 
 group :test do
