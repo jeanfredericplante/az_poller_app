@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe "Micropost pages" do
   subject {page}
+  let(:user) { FactoryGirl.create(:user) }
+  
   describe "micropost create" do
-    let(:user) { FactoryGirl.create(:user) }
     before(:each) do
       sign_in user
       visit root_path    
@@ -29,9 +30,15 @@ describe "Micropost pages" do
           visit user_path(user) 
         end
         it { should have_content(post) }
-        it { should have_content("(#{user.microposts.count})") }
+        it { should have_content("(#{user.microposts.count})") }  
         
-      end  
+        describe "when deleting a micropost" do
+          it { should have_link("delete", href: micropost_path(user.microposts.first)) }
+          describe "it should decrement your microposts count by 1" do
+            specify { expect {click_link("delete")}.to change(user.microposts, :count).by(-1) }
+          end
+        end
+      end
     end
   end
 end

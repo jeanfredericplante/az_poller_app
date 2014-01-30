@@ -127,7 +127,7 @@ describe User do
 
       its(:feed) { should include(old_post) }
       its(:feed) { should include(new_post) }
-      its(:feed) { should include(unfollowed_post) }
+      its(:feed) { should_not include(unfollowed_post) }
 
     end
   end

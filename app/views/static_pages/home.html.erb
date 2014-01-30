@@ -1,5 +1,12 @@
 <% if signed_in? %>
-	<%= render "static_pages/user_home" %>
+	<div class="row">
+		<aside class="span4">
+			<%= render "static_pages/user_home" %>
+		</aside>	
+		<div class="span8">
+			<%= render partial: "static_pages/feed" %>
+		</div>
+	</div>	
 <% else %>
 	<%= render "landing_page" %>
 <% end %>

@@ -95,8 +95,7 @@ describe "Authentication" do
         end
         describe "submitting to the destroy action" do
           let(:m1) { FactoryGirl.create(:micropost)}
-          before { 
-            delete micropost_path(m1) }
+          before { delete micropost_path(m1) }
           specify { expect(response).to redirect_to (signin_path)}
         end
         
@@ -116,6 +115,16 @@ describe "Authentication" do
       describe "submiting a PATCH request to the users#update action" do
         before { patch user_path(wrong_user) }
         specify { expect(response).to redirect_to(root_url) }
+      end
+      describe "in the microposts controller" do
+        describe "submitting the destroy action" do
+          let!(:p_wrong_user) { FactoryGirl.create(:micropost, user: wrong_user)}
+          describe "it should redirect to root" do
+            before { delete micropost_path(p_wrong_user) }
+            specify { expect(response).to redirect_to (root_url) }
+          end
+          specify { expect{delete micropost_path(p_wrong_user)}.to_not change(wrong_user.microposts, :count) }
+        end
       end
     end
     describe "as a non admin user" do
