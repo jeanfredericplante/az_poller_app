@@ -39,6 +39,16 @@ describe "Micropost pages" do
           end
         end
       end
+      
+      describe "when going to your home page, it should allow destroying a post" do
+        before { 
+          FactoryGirl.create(:micropost, user: user)
+          visit root_path 
+        }
+        
+      end
     end
   end
+  
+
 end

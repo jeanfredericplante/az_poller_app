@@ -38,8 +38,27 @@ describe "Static pages" do
             expect(page).to have_selector("li", text: item.content)
           end
         end
-      
+        it "should have a delete link for my feed items" do
+          user.feed.each do |item|
+            expect(page).to have_link("delete", href: micropost_path(item))
+          end
+        end
       end
+      
+      describe "my feed should include a micropost count" do
+        before(:each) do
+          FactoryGirl.create(:micropost, user: user)
+          visit root_path # why do i need to visit the root path again?
+        end
+        it { should have_content("Micropost(1)")}
+        it "should pluralize the micropost count" do
+          FactoryGirl.create(:micropost, user: user)
+          visit root_path 
+          expect(page).to have_content("Microposts(2)")     
+        end
+        
+      end
+      
     end
 
 
